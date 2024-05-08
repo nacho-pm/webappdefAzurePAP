@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+<body>
+    <h2>Proyecto Cloud</h2>
+    <h3>Miguel Diaz Cabeza e Ignacio Peñalver Martin</h3>
+    <p>Este es nuestro proyecto para la asignatura de Paradigmas de la Programación Avanzada ➡️
+        <a class="url-main" href="https://github.com/nacho-pm/webappdefAzurePAP" target="_blank">nuestro proyecto de github</a>
+    </p>
+
+    <div>
+        <h2>Datos almacenados en la base de datos 'databasepap' </h2>
+        <form id="getClasificacion">
+            <input type="submit" value="Visualizar datos (ordenados por ID)" />
+        </form>
+        <button id="ordenarPorPuntuacion">Ordenar por mayor Puntuación</button>
+        <button id="ordenarPorDuracion">Ordenar por menor Duración</button>
+        <button id="ordenarPorFecha">Ordenar por Fecha</button>
+        <button id="ordendarPorMayorPuntuacionYMenorDuracion">Ordenar por mayor Puntuación y menor Duración</button>
+        <input type="text" id="buscarNombre" placeholder="Buscar por nombre">
+        <button id="buscarPorNombre">Buscar</button>        
+        <table id="tablaClasificacion">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Puntuación</th>
+                    <th>Duración</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTablaClasificacion"></tbody>
+        </table>
+        <p id="textoGet"></p>
+    </div>
+
+    <div>
+        <h4>Eliminar un Usuario por su ID</h4>
+        <form id="deleteUsuario">
+            <label for="id">ID:</label>
+            <input type="number" name="id" id="id" />
+            <input type="submit" value="Eliminar" />
+        </form>
+        <p id="textoDelete"></p>
+    </div>
+
+    <div>
+        
+        <h4>Añadir un Usuario</h4>
+        <form id="postUsuario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" />
+            <label for="puntuacion">Puntuación:</label>
+            <input type="number" name="puntuacion" id="puntuacion" />
+            <label for="duracion">Duración:</label>
+            <input type="number" name="duracion" id="duracion" />
+            <label for="fecha">Fecha:</label>
+            <input type="datetime" name="fecha" id="fecha" />
+            <input type="submit" value="Añadir" />
+        </form>
+        <p id="textoPost"></p>
+    </div>
+
+    
+
+    <script>
+
+        document.getElementById('getClasificacion').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch('/clasificacion');
+                const data = await response.json();
+                mostrarDatosEnTabla(data);
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        });
+
+        document.getElementById('ordenarPorPuntuacion').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/clasificacion');
+                let data = await response.json();
+                // Ordenar por puntuación de mayor a menor
+                data.sort((a, b) => b.puntuacion - a.puntuacion);
+                mostrarDatosEnTabla(data);
+            } catch (error) {
+                console.error('Error al ordenar por puntuación:', error);
+            }
+        });
+
+        document.getElementById('ordenarPorDuracion').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/clasificacion');
+                let data = await response.json();
+                // Ordenar por duración de menor a mayor
+                data.sort((a, b) => a.duracion - b.duracion);
+                mostrarDatosEnTabla(data);
+            } catch (error) {
+                console.error('Error al ordenar por duración:', error);
+            }
+        });
+
+        document.getElementById('ordenarPorFecha').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/clasificacion');
+                let data = await response.json();
+                // Ordenar por fecha de menor a mayor
+                data.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+                mostrarDatosEnTabla(data);
+            } catch (error) {
+                console.error('Error al ordenar por fecha:', error);
+            }
+        });
+
+        document.getElementById('ordendarPorMayorPuntuacionYMenorDuracion').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/clasificacion');
+                let data = await response.json();
+                // Ordenar por puntuación de mayor a menor y duración de menor a mayor
+                data.sort((a, b) => b.puntuacion - a.puntuacion || a.duracion - b.duracion);
+                mostrarDatosEnTabla(data);
+            } catch (error) {
+                console.error('Error al ordenar por puntuación y duración:', error);
+            }
+        });
+
+        document.getElementById('buscarPorNombre').addEventListener('click', async () => {
+            try {
+                const nombreBuscado = document.getElementById('buscarNombre').value.toLowerCase();
+                const response = await fetch('/clasificacion');
+                let data = await response.json();
+                // Filtrar los datos por nombre
+                data = data.filter(usuario => usuario.nombre.toLowerCase().includes(nombreBuscado));
+                // Mostrar datos filtrados en la tabla
+                if (data.length === 0) {
+                    alert("[!] No se ha encontrado ningún usuario con ese nombre.");
+                } else {
+                    mostrarDatosEnTabla(data);
+                }
+            } catch (error) {
+                console.error('Error al buscar por nombre:', error);
+            }
+        });
+
+        document.getElementById('postUsuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const nombre = document.getElementById('nombre').value;
+                const puntuacion = document.getElementById('puntuacion').value;
+                const duracion = document.getElementById('duracion').value;
+                const fecha = document.getElementById('fecha').value;
+                const response = await fetch('/clasificacion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nombre, puntuacion, duracion, fecha }),
+                });
+                const data = await response.json();    
+                document.getElementById('textoPost').innerText = data.message;
+                document.getElementById('nombre').value = '';
+                document.getElementById('puntuacion').value = '';
+                document.getElementById('duracion').value = '';
+                document.getElementById('fecha').value = '';
+            } catch (error) {
+                console.error('Error al añadir usuario:', error);
+            }
+        });
+
+        document.getElementById('deleteUsuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const id = document.getElementById('id').value;
+                const response = await fetch(`/clasificacion/${id}`, {
+                    method: 'DELETE',
+                });
+                const data = await response.json();
+                document.getElementById('textoDelete').innerText = data.message;
+                document.getElementById('id').value = '';
+                
+            } catch (error) {
+                console.error('Error al eliminar usuario:', error);
+            }
+        });
+
+        function mostrarDatosEnTabla(data) {
+            const tabla = document.getElementById('bodyTablaClasificacion');
+            tabla.innerHTML = '';
+            data.forEach((usuario) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${usuario.id}</td>
+                    <td>${usuario.nombre}</td>
+                    <td>${usuario.puntuacion}</td>
+                    <td>${usuario.duracion}</td>
+                    <td>${usuario.fecha}</td>
+                `;
+                tabla.appendChild(tr);
+            });
+            document.getElementById('textoPost').innerText = '';
+            document.getElementById('textoDelete').innerText = '';
+        }
+    </script>
+</body>
+</html>
