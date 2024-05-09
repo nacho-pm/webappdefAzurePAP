@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inicio</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+                background-image: url('/inicio.jpg'); /* Ajusta la ruta según la ubicación de tu archivo HTML */
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            /* Estilos para los elementos HTML */
+            h2, h3, h4, p, label, input, button, table {
+                color: black; /* Cambiar el color del texto según sea necesario */
+            }
+            /* Añadir más estilos según necesites */
+        </style>
+    </head>
 <body>
     <h2>Proyecto Cloud</h2>
-    <h3>Miguel Diaz Cabeza e Ignacio Peñalver Martin</h3>
+    <h3>Ignacio Peñalver Martin y Miguel Diaz Cabeza</h3>
     <p>Este es nuestro proyecto para la asignatura de Paradigmas de la Programación Avanzada ➡️
         <a class="url-main" href="https://github.com/nacho-pm/webappdefAzurePAP" target="_blank">nuestro proyecto de github</a>
     </p>
-
     <div>
         <h2>Datos almacenados en la base de datos 'databasepap' </h2>
         <form id="getClasificacion">
@@ -37,7 +57,6 @@
         </table>
         <p id="textoGet"></p>
     </div>
-
     <div>
         <h4>Eliminar un Usuario por su ID</h4>
         <form id="deleteUsuario">
@@ -47,7 +66,6 @@
         </form>
         <p id="textoDelete"></p>
     </div>
-
     <div>
         
         <h4>Añadir un Usuario</h4>
@@ -64,9 +82,6 @@
         </form>
         <p id="textoPost"></p>
     </div>
-
-    
-
     <script>
 
         document.getElementById('getClasificacion').addEventListener('submit', async (e) => {

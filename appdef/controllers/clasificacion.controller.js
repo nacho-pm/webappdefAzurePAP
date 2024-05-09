@@ -25,21 +25,6 @@ const readUser_nombre = (req, res) => {
         }
     });
 };
-/*
-const readUser_id = (req, res) => {
-    const { id } = req.params;
-    const query = `SELECT * FROM clasificacion WHERE id = ?;`;
-    const queryformat = mysql.format(query, [id]);
-    database.query(queryformat, (err, result) => {
-        if (err) throw err;
-        if (result[0] !== undefined) {
-            res.status(200).json(result[0]);   // Devuelve un JSON con el resultado de la consulta
-        } else {
-            res.status(404).json({ message: '[!] No se ha encontrado el usuario.' });
-        }
-    });
-};
-*/
 
 // Funcion para añadir una clasificacion
 const postClasificacion = (req, res) => {
@@ -67,20 +52,6 @@ const postClasificacion = (req, res) => {
     }
 };
 
-// Funcion para borrar una clasificacion
-/*
-const deleteClasificacion_nombre = (req, res) => {
-    const { nombre } = req.body;
-    const query = `DELETE FROM clasificacion WHERE nombre = ?;`;
-    const queryformat = mysql.format(query, [nombre]);
-    database.query(queryformat, (err, result) => {
-        if (err) throw err;
-        else {
-            res.status(201).json({ message: '[+] Clasificacion borrada correctamente.' });
-        }
-    });
-};
-*/
 const deleteClasificacion = (req, res) => {
     const { id } = req.params;
 
